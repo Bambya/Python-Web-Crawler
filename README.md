@@ -1,10 +1,12 @@
 # Python-Web-Crawler
-. 
+ 
 This is the code for crawling any website of your choice, in this case flinkhub.com. 
 The root url will have to be entered manually in the MongoDB database, in the form
 of a json object with the relevant fields.
 
+
 Example:- (change "Link" according to your choice)
+
 
 {
     "Link" : "https://flinkhub.com",
@@ -18,20 +20,27 @@ Example:- (change "Link" according to your choice)
     "Created at" : ISODate("2020-08-29T12:46:00.000Z")
 }
 
+
 ### Run locally from command line
+
 
 - Install dependencies
 
+
 pip install requests
+
 
 
 pip install beautifulsoup4
 
 
+
 pip install pymongo
 
 
+
 pip install pytz
+
 
 
 - To start crawling process
