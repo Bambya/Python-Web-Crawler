@@ -2,9 +2,11 @@ import pytz
 import string
 import random
 import os.path
-from datetime import datetime as dt
 
 local_tz = pytz.timezone('Asia/Kolkata')
+
+#This dictionary will help us to get month number from month
+month_dict = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6, "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
 
 
 # function to convert GMT to IST
