@@ -27,31 +27,24 @@ Example:- (change "Link" according to your choice)
 - Install virtual environment first
 
 
-
-pip install virtualenv
-
+ pip install virtualenv
 
 
 - Set up virtual environment
 
 
-
-virtualenv myproject
-
+ virtualenv myproject
 
 
 - Activate virtual environment
 
 
+ (Linux) $ source myproject/bin/activate
 
-(Linux) $ source myproject/bin/activate
-
-(Windows) > myproject\Scripts\activate
-
+ (Windows) > myproject\Scripts\activate
 
 
--Install dependencies
-
+- Install dependencies
 
 
 pip install -r requirements.txt
@@ -61,5 +54,4 @@ pip install -r requirements.txt
 - To start crawling process
 
 
-
-python3 crawler.py
+ python3 crawler.py
