@@ -10,14 +10,14 @@ Example:- (change "Link" according to your choice)
 
 {
     "Link" : "https://flinkhub.com",
-    "Source Link" : "",
-    "Is Crawled" : false,
-    "Last Crawled Dt" : null,
-    "Response Status" : 0,
-    "Content type" : "",
-    "Content length" : 0,
-    "File path" : "",
-    "Created at" : ISODate("2020-08-29T12:46:00.000Z")
+    "Source_Link" : "",
+    "Is_Crawled" : false,
+    "Last_Crawled_Dt" : null,
+    "Response_Status" : 0,
+    "Content_Type" : "",
+    "Content_Length" : 0,
+    "File_Path" : "",
+    "Created_At" : ISODate("2020-08-29T12:46:00.000Z")
 }
 
 
