@@ -30,7 +30,7 @@ Example:- (change "Link" according to your choice)
  pip install virtualenv
 
 
-- Set up virtual environment
+- Set up virtual environment with name myproject
 
 
  virtualenv myproject
@@ -39,9 +39,10 @@ Example:- (change "Link" according to your choice)
 - Activate virtual environment
 
 
- (Linux) $ source myproject/bin/activate
+   (Linux) $ source myproject/bin/activate
 
- (Windows) > myproject\Scripts\activate
+
+   (Windows) > myproject\Scripts\activate
 
 
 - Install dependencies
