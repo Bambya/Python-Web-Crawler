@@ -27,13 +27,13 @@ Example:- (change "Link" according to your choice)
 - Install virtual environment first
 
 
- pip install virtualenv
+   pip install virtualenv
 
 
 - Set up virtual environment with name myproject
 
 
- virtualenv myproject
+   virtualenv myproject
 
 
 - Activate virtual environment
@@ -48,11 +48,11 @@ Example:- (change "Link" according to your choice)
 - Install dependencies
 
 
-pip install -r requirements.txt
+   pip install -r requirements.txt
 
 
 
 - To start crawling process
 
 
- python3 crawler.py
+    python3 crawler.py
