@@ -11,12 +11,13 @@ from bs4 import BeautifulSoup as bsoup
 from config import config
 from logger import logger
 from time import sleep
+from tld import get_tld
 from functions import convert_to_ist, save_file, save_html_file, get_file_name, month_dict
 
 # function to get link from tag, and then update database (will run in a loop)
-def get_link(tag, mycol, document, timeout):
+def get_link(tag, mycol, document):
 
-    url = tag.get('href', timeout)
+    url = tag.get('href')
     flag = 0                                                       # flag sort of acts like continue statement; if flag is 1, the subsequent statements are not executed
 
     if(url):
@@ -32,7 +33,9 @@ def get_link(tag, mycol, document, timeout):
             if document["Link"][-1] == '/':
                 link = link[1:]                                    # to avoid 2 consecutive '/' signs
 
-            link = document["Link"] + link
+            domain = get_tld(document["Link"], as_object=True).fld
+
+            link = domain + link
 
         if mycol.count_documents({'Link': link}, limit=1) != 0:             # check if link is already present
             flag = 1
@@ -40,7 +43,9 @@ def get_link(tag, mycol, document, timeout):
         if not flag:
             '''get date parameters - year, month, day, hour, min and seconds using
                 response headers and the regex library'''
-            datetime = requests.head(link, allow_redirects=True).headers['date']
+            requests_head = requests.head(link, allow_redirects=True)
+
+            datetime = requests_head.headers['date']
 
             datetime = datetime.split()                                     # Before splitting, date is in this format:- Mon, 24 Aug 2020 14:18:38 GMT
 
@@ -61,10 +66,10 @@ def get_link(tag, mycol, document, timeout):
 
             last_crawled_date = 0
 
-            response_status = requests.head(link, allow_redirects=True).status_code
+            response_status = requests_head.status_code
 
             try:
-                content_type = requests.head(link, allow_redirects=True).headers['content-type']
+                content_type = requests_head.headers['content-type']
             except:
                 flag = 1
 
@@ -75,8 +80,8 @@ def get_link(tag, mycol, document, timeout):
 
                 created_at = convert_to_ist(utc_time)
 
-                link_params = {"Link": link, "Source Link": source_link, "Is Crawled": is_crawled, "Last Crawled Dt": last_crawled_date, "Response Status": response_status,
-                                "Content type": content_type, "Content length": content_length, "File path": file_path, "Created at": created_at}
+                link_params = {"Link": link, "Source_Link": source_link, "Is_Crawled": is_crawled, "Last_Crawled_Dt": last_crawled_date, "Response_Status": response_status,
+                                "Content_Type": content_type, "Content_Length": content_length, "File_Path": file_path, "Created_At": created_at}
 
                 # insert document in collection
                 x = mycol.insert_one(link_params)
@@ -86,90 +91,84 @@ def get_link(tag, mycol, document, timeout):
 # main crawling function
 def crawl():
 
-    try:
+    # Create mongodb database and collection(table)
+    myclient = pymongo.MongoClient(config['mongo_uri'])
+    mydb = myclient[config["database_name"]]
+    mycol = mydb[config["collection_name"]]
+    # initialize cycle
+    cycle = 1
 
-        # Create mongodb database and collection(table)
-        myclient = pymongo.MongoClient(config['local_host'])
-        mydb = myclient["mydatabase"]
-        mycol = mydb["crawler_links"]
-        # initialize cycle
-        cycle = 1
+    while True:
 
-        while True:
+        time_before_24hrs = dt.now() - td(days=config["link_refresh_time"])             # This was the time 24 hours before this current time
 
-            stop = False                                                                    #will help in breaking loop
+        # Check collection for links that were either never crawled or were crawled more than 24 hours ago
+        crawlable_documents = mycol.find( {'$or': [ {"Is_Crawled": False  }, {"Last_Crawled_Dt": {'$lt': time_before_24hrs} } ] } )
 
-            time_before_24hrs = dt.now() - td(days=config["link_refresh_time"])             # This was the time 24 hours before this current time
+        print("Size of all docs = ", mycol.count_documents({}))
+        print("Size of crawlable docs = ", mycol.count_documents({'$or': [ {"Is_Crawled": False }, {"Last Crawled_Dt": {'$lt': time_before_24hrs} } ]}))
 
-            # Check collection for links that were either never crawled or were crawled more than 24 hours ago
-            crawlable_documents = mycol.find( {'$or': [ {"Is Crawled": False  }, {"Last Crawled Dt": {'$lt': time_before_24hrs} } ] } )
+        for document in crawlable_documents:
 
-            print("Size of all docs = ", mycol.count_documents({}))
-            print("Size of crawlable docs = ", mycol.count_documents({'$or': [ {"Is Crawled": False }, {"Last Crawled Dt": {'$lt': time_before_24hrs} } ]}))
+            requests_head = requests.head(document["Link"], allow_redirects=True)
+            requests_get =  requests.get(document['Link'])
 
-            for document in crawlable_documents:
+            response_status = requests_head.status_code
+            content_type = requests_head.headers['content-type']
 
-                response_status = requests.head(document["Link"], allow_redirects=True).status_code
-                content_type = requests.head(document["Link"], allow_redirects=True).headers['content-type']
+            if response_status != 200:
 
-                if response_status != 200:
+                mycol.update_one({'_id': document['_id']}, {'$set': {"Is_Crawled": True, "Last_Crawled_Dt": dt.now() } } )
+                continue
 
-                    mycol.update_one({'_id': document['_id']}, {'$set': {"Is Crawled": True, "Last Crawled Dt": dt.now() } } )
-                    continue
+            if 'text/html' not in content_type:
 
-                if 'text/html' not in content_type:
+                # give appropriate name and save file
+                r = requests_get
+                file_name = get_file_name(content_type)
+                save_file(file_name, r)
 
-                    # give appropriate name and save file
-                    r = requests.get(document['Link'])
-                    file_name = get_file_name(content_type)
-                    save_file(file_name, r)
+                mycol.update_one({ '_id' : document['_id']}, {'$set': {"Is_Crawled": True, "Last_Crawled_Dt": dt.now() } } )
+                continue
 
-                    mycol.update_one({ '_id' : document['_id']}, {'$set': {"Is Crawled": True, "Last Crawled Dt": dt.now() } } )
-                    continue
+            try:
+                logger.debug("Making HTTP GET request: " + document['Link'])
+                r = requests_get
+                res = r.text
+                logger.debug("Got HTML source, content length = " + str(len(res)))
+            except:
+                logger.exception("Failed to get HTML source from " + document['Link'])
+                continue
 
-                try:
-                    logger.debug("Making HTTP GET request: " + document['Link'])
-                    r = requests.get(document['Link'])
-                    res = r.text
-                    logger.debug("Got HTML source, content length = " + str(len(res)))
-                except:
-                    logger.exception("Failed to get HTML source from " + document['Link'])
-                    continue
+            mycol.update_one({ '_id' : document['_id']}, {'$set': {"Is_Crawled": True, "Last_Crawled_Dt": dt.now() } } )
 
-                mycol.update_one({ '_id' : document['_id']}, {'$set': {"Is Crawled": True, "Last Crawled Dt": dt.now() } } )
+            # Generate string of random characters
+            file_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 8))
 
-                # Generate string of random characters
-                file_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 8))
+            # Save html file to disc in a folder named HTML files
+            save_html_file(file_name, r)
 
-                # Save html file to disc in a folder named HTML files
-                save_html_file(file_name, r)
+            logger.debug("Extracting links from the HTML")
 
-                logger.debug("Extracting links from the HTML")
+            soup = bsoup(res, 'html.parser')
 
-                soup = bsoup(res, 'html.parser')
+            tags = soup('a')
 
-                tags = soup('a')
+            if len(tags) == 0:
+                continue
 
-                if len(tags) == 0:
-                    continue
+            # With multithreading crawl each link in tag
+            with ThreadPoolExecutor(max_workers=5) as executor:
 
-                # With multithreading crawl each link in tag
-                with ThreadPoolExecutor(max_workers=5) as executor:
+                for tag in tags:
+                    executor.submit(get_link, tag, mycol, document)
 
-                    for tag in tags:
-                        executor.submit(get_link, tag, mycol, document, 60)
+            # print number of links crawled for reference
+            print("Number of links crawled = ", mycol.count_documents({}))
 
-                # print number of links crawled for reference
-                print("Number of links crawled = ", mycol.count_documents({}))
-
-                # check if maximum link limited is exceeded, 5000 in this case
-                if mycol.count_documents({}) >= config["max_links"]:
-                    print('Maximum limit of links reached')
-                    stop = True
-                    break
-
-            if stop:
-                break
+            # check if maximum link limited is exceeded, 5000 in this case
+            if mycol.count_documents({}) >= config["max_links"]:
+                print('Maximum limit of links reached')
 
             '''end of cycle, sleep for 5 seconds'''
             print("Number of links crawled = ", mycol.count_documents({}))
@@ -178,16 +177,10 @@ def crawl():
 
             if mycol.count_documents({}) == 1:
                 print("No links left to crawl")
-                break
-
 
             # Increment cycle
             cycle += 1
             print("Start of cycle " + str(cycle) + '\n')
-
-    except:
-        print("Network Error occurred")
-        return
 
 
 if __name__ == "__main__":
@@ -196,6 +189,12 @@ if __name__ == "__main__":
 
     logger.debug('Getting links in database')
 
-    crawl()
+    while True:
+        try:
+            crawl()
+        except:
+            print("Network Error occurred / No internet connection")
+        sleep(0.2)
+
 
     logger.debug('Process complete')

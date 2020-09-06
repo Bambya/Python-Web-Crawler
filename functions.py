@@ -2,6 +2,7 @@ import pytz
 import string
 import random
 import os.path
+from config import config
 
 local_tz = pytz.timezone('Asia/Kolkata')
 
@@ -61,13 +62,13 @@ def get_file_name(content_type):
 
 def save_html_file(file_name, response_object):
 
-    with open(os.path.join('./HTML Files', file_name + ".txt"), 'w', encoding="utf-8") as f:
+    with open(os.path.join(config["save_location"], file_name + ".txt"), 'w', encoding="utf-8") as f:
         f.write(response_object.text)
 
 
 def save_file(file_name, response_object):
 
-    with open(os.path.join('./HTML Files', file_name), 'wb') as f:
+    with open(os.path.join(config["save_location"], file_name), 'wb') as f:
         for chunk in response_object.iter_content():
             f.write(chunk)
 

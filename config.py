@@ -1,6 +1,12 @@
 config = {
 
-    "local_host": "mongodb://localhost:27017/",
+    "mongo_uri": "mongodb://localhost:27017/",
+
+    "database_name": "mydatabase",
+
+    "collection_name": "crawler_links",
+    
+    "save_location": "./HTML Files",
     
     "sleep_time": 5,
 
