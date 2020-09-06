@@ -24,25 +24,34 @@ Example:- (change "Link" according to your choice)
 ### Run locally from command line
 
 
-- Install dependencies
+- Install virtual environment first
 
 
-pip install requests
+pip install virtualenv
 
 
-
-pip install beautifulsoup4
-
+- Set up virtual environment
 
 
-pip install pymongo
+virtualenv myproject
 
 
+- Activate virtual environment
 
-pip install pytz
+
+(Linux) $ source myproject/bin/activate
+
+(Windows) > myproject\Scripts\activate
+
+
+-Install dependencies
+
+
+pip install -r requirements.txt
 
 
 
 - To start crawling process
+
 
 python3 crawler.py
