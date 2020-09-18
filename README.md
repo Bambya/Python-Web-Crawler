@@ -5,7 +5,7 @@ The root url will have to be entered manually in the MongoDB database, in the fo
 of a json object with the relevant fields.
 
 
-Example:- (you can change "Link" key according to your choice of url)
+###Example:- (you can change "Link" key according to your choice of url)
 
 
 {
