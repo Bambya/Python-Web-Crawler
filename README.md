@@ -10,8 +10,8 @@ of a json object with the relevant fields. You can change "Link" key according t
 
 {
 
-    {
-    "Link" : "https://letterboxd.com",
+    
+    { "Link" : "https://letterboxd.com",
     
     "Source_Link" : "",
     
@@ -27,8 +27,8 @@ of a json object with the relevant fields. You can change "Link" key according t
     
     "File_Path" : "",
     
-    "Created_At" : ISODate("2020-08-29T12:46:00.000Z")
-    }
+    "Created_At" : ISODate("2020-08-29T12:46:00.000Z") }
+    
     
 }
 
