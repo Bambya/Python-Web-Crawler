@@ -2,7 +2,7 @@
  
 This is the code for crawling any website of your choice, in this case flinkhub.com. 
 The root url will have to be entered manually in the MongoDB database, in the form
-of a json object with the relevant fields. You can change "Link" key according to your choice of url
+of a json object with the relevant fields. You can change "Link" key according to your choice of url.
 
 
 ### Example:- 
@@ -10,14 +10,23 @@ of a json object with the relevant fields. You can change "Link" key according t
 
 {
     "Link" : "https://letterboxd.com",
+    
     "Source_Link" : "",
+    
     "Is_Crawled" : false,
+    
     "Last_Crawled_Dt" : null,
+    
     "Response_Status" : 0,
+    
     "Content_Type" : "",
+    
     "Content_Length" : 0,
+    
     "File_Path" : "",
+    
     "Created_At" : ISODate("2020-08-29T12:46:00.000Z")
+    
 }
 
 
