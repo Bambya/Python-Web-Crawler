@@ -1,7 +1,6 @@
 # Python-Web-Crawler
  
-This is the code for crawling any website of your choice, in this case https://letterboxd.com. 
-The root url will have to be entered manually in the MongoDB database, in the form
+This is the code for crawling any website of your choice, in this case https://letterboxd.com. Links will be crawled recursively and stored in MongoDB database (database name is given in config.py file). The root url will have to be entered manually in the MongoDB database, in the form
 of a json object with the relevant fields. You can change "Link" key according to your choice of url.
 
 In config.py file, various user parameters are given. Maximum link limit is set to 5000 and sleep time set to 5 seconds. You can edit these default parameters according to your crawling needs.
