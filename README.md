@@ -9,7 +9,7 @@ Example:- (change "Link" according to your choice)
 
 
 {
-    "Link" : "https://flinkhub.com",
+    "Link" : "https://letterboxd.com",
     "Source_Link" : "",
     "Is_Crawled" : false,
     "Last_Crawled_Dt" : null,
