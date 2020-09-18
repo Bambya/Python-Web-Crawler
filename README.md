@@ -4,6 +4,8 @@ This is the code for crawling any website of your choice, in this case flinkhub.
 The root url will have to be entered manually in the MongoDB database, in the form
 of a json object with the relevant fields. You can change "Link" key according to your choice of url.
 
+Edit the config.py file according to your crawling needs
+
 
 ### Example:- 
 
