@@ -45,27 +45,28 @@ of a json object with the relevant fields. You can change "Link" key according t
 
 - Set up virtual environment with name myproject
 
-
+```
    virtualenv myproject
-
+```
 
 - Activate virtual environment
 
-
+```
    (Linux) $ source myproject/bin/activate
 
 
    (Windows) > myproject\Scripts\activate
-
+```
 
 - Install dependencies
 
-
+```
    pip install -r requirements.txt
-
+```
 
 
 - To start crawling process
 
-
+```
     python3 crawler.py
+```
