@@ -36,13 +36,13 @@ of a json object with the relevant fields. You can change "Link" key according t
 
 
 
-- Install virtual environment first
+### Install virtual environment first
 
 
    pip install virtualenv
 
 
-- Set up virtual environment with name myproject
+### Set up virtual environment with name myproject
 
 
    virtualenv myproject
