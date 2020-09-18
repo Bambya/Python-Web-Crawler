@@ -9,7 +9,6 @@ of a json object with the relevant fields. You can change "Link" key according t
 
 
 
-
     
     {"Link" : "https://letterboxd.com",
     
@@ -30,7 +29,6 @@ of a json object with the relevant fields. You can change "Link" key according t
     "Created_At" : ISODate("2020-08-29T12:46:00.000Z")}
     
     
-
 
 
 ### Run locally from command line
