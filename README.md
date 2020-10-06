@@ -1,4 +1,4 @@
-# Python-Web-Crawler
+# Spiderbot - A Web Crawler
  
 This is the code for crawling any website of your choice, in this case https://letterboxd.com. Links will be crawled recursively and stored in MongoDB database (database name is given in config.py file). In config.py file, various user parameters are given. Maximum link limit is set to 5000 and sleep time set to 5 seconds. You can edit these default parameters according to your crawling needs.
 
